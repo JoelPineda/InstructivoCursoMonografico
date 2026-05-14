@@ -48,7 +48,7 @@
     align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .55s ease, transform .55s cubic-bezier(.4,0,.2,1);
+    transition: opacity .55s ease, transform .55s cubic-bezier(.4,0,.2,1), scale .55s cubic-bezier(.4,0,.2,1);
     transform: translateX(60px);
     padding: 0;
     overflow: hidden;
@@ -56,11 +56,13 @@
   .slide.active {
     opacity: 1;
     pointer-events: all;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
+    /* transform: translateX(0); */
   }
   .slide.exit-left {
     opacity: 0;
-    transform: translateX(-60px);
+    transform: translateX(-60px) scale(0.98);
+    /* transform: translateX(-60px); */
   }
 
   /* ── BACKGROUNDS ── */
@@ -257,12 +259,15 @@
 
   /* ── CARDS ── */
   .card {
-    background: rgba(255,255,255,.06);
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 16px;
     padding: 20px 22px;
     margin-bottom: 14px;
-    transition: background .25s;
+    transition: all .3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
     animation: fadeUp .5s both;
   }
   .card:hover { background: rgba(255,255,255,.1); }
@@ -558,8 +563,9 @@
 
   /* highlight box */
   .highlight-box {
-    background: linear-gradient(135deg, rgba(46,204,135,.12), rgba(41,82,163,.18));
-    border: 1px solid rgba(46,204,135,.3);
+    background: linear-gradient(135deg, rgba(46,204,135,.15), rgba(41,82,163,.25));
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(46,204,135,.4);
     border-radius: 14px;
     padding: 16px 20px;
     font-size: 14px;
@@ -593,6 +599,16 @@
     padding: 5px 14px;
     font-size: 11px;
     color: rgba(255,255,255,.7);
+  }
+
+  .side-img {
+    width: 280px;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 10px rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    animation: fadeUp 1s .4s both;
   }
 </style>
 </head>
@@ -681,14 +697,15 @@
         JHOMY MANUEL DEL JESUS MEDINA
       </div>
     </div>
-    <div class="slide-body" style="align-items:center;">
-      <div class="intro-graphic" style="flex:0 0 180px;">
+    <div class="slide-body" style="align-items:center; gap:32px;">
+      <div class="col" style="flex:0 0 280px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
         <div class="book-icon">📚</div>
         <div class="intro-badge">
           <span class="badge">🎯 Protocolo</span>
           <span class="badge">📋 Norma</span>
           <span class="badge">🔬 Investigación</span>
         </div>
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=400&auto=format&fit=crop" class="side-img" style="height:220px; margin-top:30px; width:100%;" alt="Investigación">
       </div>
       <div class="col" style="max-width: 600px;">
         <div class="highlight-box" style="margin-bottom:16px;">
@@ -737,6 +754,9 @@
           <div class="card-body">Introduce al estudiante en la investigación aplicada dentro del ámbito de los contenidos del curso, conectando teoría y práctica profesional.</div>
         </div>
       </div>
+      <div class="col" style="flex:0 0 240px;">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop" class="side-img" alt="Ciencia">
+      </div>
     </div>
   </div>
 
@@ -755,7 +775,10 @@
       </div>
     </div>
     <div class="slide-body scrollable">
-      <div class="col" style="max-width: 680px; margin: 0 auto;">
+      <div class="col" style="flex: 0 0 300px;">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400&auto=format&fit=crop" class="side-img" style="width:100%;" alt="Objetivos">
+      </div>
+      <div class="col" style="max-width: 600px;">
         <ul class="fancy-list">
           <li><span class="bullet">🎯</span><span>Desarrollar experiencias de aprendizaje en torno a temas considerados de mayor interés y actualidad en las áreas de conocimiento relativas a la carrera y al ejercicio de la profesión.</span></li>
           <li><span class="bullet">💡</span><span>Estimular a los estudiantes a desarrollar una actitud favorable a la investigación de problemas relacionados con la práctica profesional y su vinculación con los contextos laborales.</span></li>
@@ -826,12 +849,12 @@
         RONALD DIAZ PEREZ
       </div>
     </div>
-    <div class="slide-body" style="align-items:center; gap:28px;">
-      <div style="text-align:center; flex:0 0 160px;">
+    <div class="slide-body" style="align-items:center; gap:32px;">
+      <div class="col" style="text-align:center; flex:0 0 160px;">
         <div style="font-size:72px;" class="float">📝</div>
         <div style="font-size:13px; color: rgba(255,255,255,.55); margin-top:8px;">Dirección de<br>Trabajo de Grado</div>
       </div>
-      <div class="col" style="max-width:560px;">
+      <div class="col" style="max-width:500px;">
         <p style="font-size:14px; color:rgba(255,255,255,.7); margin-bottom:14px;">Pueden optar por el curso monográfico los estudiantes que cumplan <strong style="color:white;">todos</strong> los siguientes requisitos:</p>
         <ul class="fancy-list">
           <li><span class="bullet">✔</span><span>Tener <strong>aprobada</strong> la asignatura <em style="color:var(--accent);font-style:normal;">Seminario de Grado</em>.</span></li>
@@ -841,6 +864,9 @@
         <div class="highlight-box" style="margin-top:16px;">
           📌 De todos los requisitos se debe presentar la certificación correspondiente en la <strong>Dirección de Trabajo de Grado</strong>.
         </div>
+      </div>
+      <div class="col" style="flex:0 0 240px;">
+        <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=400&auto=format&fit=crop" class="side-img" style="height:320px; width:100%;" alt="Registro y Requisitos">
       </div>
     </div>
   </div>
@@ -888,6 +914,9 @@
           <div class="stat-pill" style="text-align:center;"><span class="stat-num">95+</span><span class="stat-lbl">Pts → copia impresa</span></div>
         </div>
       </div>
+      <div class="col" style="flex:0 0 240px;">
+        <img src="https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?q=80&w=400&auto=format&fit=crop" class="side-img" style="height:360px;" alt="Participación y Evaluación">
+      </div>
     </div>
   </div>
 
@@ -917,6 +946,9 @@
             <tr><td>Versión Final Anteproyecto</td><td class="pts">10</td></tr>
             <tr><td><strong>Total</strong></td><td class="pts" style="color:var(--accent);">30</td></tr>
           </tbody>
+          <tfoot>
+            <!-- Image moved to bottom of slide-body -->
+          </tfoot>
         </table>
       </div>
       <div class="col">
@@ -944,6 +976,9 @@
         <div class="highlight-box" style="margin-top:14px; font-size:13px;">
           🏆 Grupos con <strong>≥ 95 puntos</strong> deben entregar <strong>2 ejemplares impresos y empastados</strong> a la Coordinación.
         </div>
+      </div>
+      <div class="col" style="flex:0 0 100%; text-align:center; margin-top:20px;">
+        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop" style="width:100%; max-width:600px; border-radius:15px; opacity:0.7; box-shadow: 0 10px 20px rgba(0,0,0,0.3);" alt="Metodología">
       </div>
     </div>
   </div>
@@ -1015,15 +1050,18 @@
       </div>
     </div>
     <div class="slide-body scrollable">
-      <div class="two-col" style="width:100%;">
-        <div class="card"><div class="card-title">📄 Portada</div><div class="card-body">Logo, universidad, escuela/carrera, identificación, título, autores, asesores, ciudad, país y fecha.</div></div>
-        <div class="card"><div class="card-title">🔤 Título</div><div class="card-body">Claro, preciso y conciso. Refleja el contenido del trabajo de forma inequívoca.</div></div>
-        <div class="card"><div class="card-title">📋 Índice</div><div class="card-body">Esquema de presentación con especificación de partes y páginas que ocupan.</div></div>
-        <div class="card"><div class="card-title">📝 Introducción</div><div class="card-body">Describe el contenido general y temático, comunicando al lector los motivos de la investigación.</div></div>
-        <div class="card"><div class="card-title">❓ Planteamiento del Problema</div><div class="card-body">Describe la problemática, identifica el objeto de estudio y redacta el problema como interrogante.</div></div>
-        <div class="card"><div class="card-title">📚 Antecedentes / Justificación</div><div class="card-body">Referencias teóricas locales, nacionales e internacionales. Importancia y necesidad de la investigación.</div></div>
-        <div class="card"><div class="card-title">🎯 Objetivos y Variables</div><div class="card-body">Objetivos general y específicos con verbos operativos. Delimitación y operacionalización de variables.</div></div>
-        <div class="card"><div class="card-title">🔬 Materiales y Métodos</div><div class="card-body">Tipo de estudio, diseño, población, muestra, instrumentos y procesamiento de datos.</div></div>
+      <div style="display:flex; gap:24px;">
+        <div class="two-col" style="flex:1;">
+          <div class="card"><div class="card-title">📄 Portada</div><div class="card-body">Logo, identificación, título, autores y fecha.</div></div>
+          <div class="card"><div class="card-title">🔤 Título</div><div class="card-body">Claro, preciso y conciso. Refleja el contenido.</div></div>
+          <div class="card"><div class="card-title">📝 Introducción</div><div class="card-body">Motivos y contenido general de la investigación.</div></div>
+          <div class="card"><div class="card-title">❓ Problema</div><div class="card-body">Planteamiento e interrogante de investigación.</div></div>
+          <div class="card"><div class="card-title">🎯 Objetivos</div><div class="card-body">General y específicos con verbos operativos.</div></div>
+          <div class="card"><div class="card-title">🔬 Métodos</div><div class="card-body">Diseño, población, muestra e instrumentos.</div></div>
+        </div>
+        <div style="flex:0 0 260px;">
+           <img src="https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?q=80&w=400&auto=format&fit=crop" class="side-img" style="width:100%; height:100%;" alt="Escritura">
+        </div>
       </div>
     </div>
   </div>
@@ -1070,6 +1108,9 @@
           <div class="card-body">El informe final debe constituirse en un <strong>aporte a la comunidad científica</strong> del país dentro de su área de estudio.</div>
         </div>
       </div>
+      <div class="col" style="flex:0 0 200px;">
+        <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=400&auto=format&fit=crop" class="side-img" style="width:100%; height:320px;" alt="Asesoría">
+      </div>
     </div>
   </div>
 
@@ -1100,12 +1141,16 @@
           <li><span class="bullet">🔬</span><span>Se define el <strong>marco teórico y referencial</strong> de la investigación, el objeto de conocimiento y el manejo de datos.</span></li>
           <li><span class="bullet">🖥️</span><span>Incluye actividades en la plataforma virtual que complementan las sesiones presenciales.</span></li>
           <li><span class="bullet">📋</span><span>Producto del módulo: <strong style="color:var(--gold);">Versión Preliminar del Informe Final de Investigación</strong>.</span></li>
+          <!-- Image moved below the list -->
         </ul>
         <div class="card" style="margin-top:14px;">
           <div class="card-icon">🔗</div>
           <div class="card-title">Relación con las investigaciones</div>
           <div class="card-body">Los contenidos del módulo guardan estrecha relación con los temas de investigación del grupo, garantizando manejo conceptual y pertinencia.</div>
         </div>
+      </div>
+      <div class="col" style="text-align:center; margin-top:20px;">
+        <img src="https://images.unsplash.com/photo-1491841573634-28140fc7ced7?q=80&w=800&auto=format&fit=crop" style="width:100%; max-width:500px; height:280px; border-radius:15px; object-fit:cover; opacity:0.8; box-shadow: 0 10px 20px rgba(0,0,0,0.3);" alt="Libros">
       </div>
     </div>
   </div>
@@ -1148,6 +1193,9 @@
           <li><span class="bullet" style="font-size:9px;">🔢</span><span>Numeración romana (páginas iniciales) y arábica desde la introducción.</span></li>
         </ul>
       </div>
+      <div class="col" style="flex:0 0 100%; text-align:center; margin-top:10px;">
+         <img src="https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop" style="width:50%; height:320px; border-radius:20px; object-fit:cover; opacity:0.6;" alt="Edición">
+      </div>
     </div>
   </div>
 
@@ -1167,14 +1215,18 @@
       </div>
     </div>
     <div class="slide-body scrollable">
-      <div class="policy-grid">
-        <div class="pol-card"><span class="pol-num">1</span><span class="pol-text">Los módulos <strong>no se retiran</strong>. Una vez inscrito el Curso, el estudiante debe concluirlo según la programación.</span></div>
-        <div class="pol-card"><span class="pol-num">2</span><span class="pol-text">Al aprobar todos los módulos, el estudiante adquiere el <strong>derecho a entregar el Informe Final</strong>.</span></div>
-        <div class="pol-card"><span class="pol-num">3</span><span class="pol-text">Si aprueba módulos pero <strong>no el Informe Final</strong>, puede volver a presentarlo bajo asesoría a más tardar en el cuatrimestre siguiente.</span></div>
-        <div class="pol-card"><span class="pol-num">4</span><span class="pol-text">Si no aprueba la mitad+1 de los módulos en la primera vez, <strong>pierde los derechos</strong> y debe inscribir el curso nuevamente.</span></div>
-        <div class="pol-card"><span class="pol-num">5</span><span class="pol-text">Si reprueba algún módulo, debe <strong>inscribirlo, cursarlo y aprobarlo</strong> en otro curso a más tardar en el siguiente cuatrimestre.</span></div>
-        <div class="pol-card"><span class="pol-num">6</span><span class="pol-text">Si en el siguiente cuatrimestre no completa todos los módulos, debe <strong>iniciar de nuevo el proceso</strong> y el tema queda sujeto a revisión.</span></div>
-        <div class="pol-card" style="grid-column:1/-1;"><span class="pol-num">7</span><span class="pol-text">El estudiante puede <strong>suspender su participación</strong>; los módulos aprobados se transfieren al siguiente cuatrimestre, tras el cual pierde los derechos.</span></div>
+      <div style="display:flex; gap:20px;">
+        <div class="policy-grid" style="flex:1;">
+          <div class="pol-card"><span class="pol-num">1</span><span class="pol-text">Los módulos <strong>no se retiran</strong>. El estudiante debe concluirlo según programación.</span></div>
+          <div class="pol-card"><span class="pol-num">2</span><span class="pol-text">Aprobar todos los módulos da el <strong>derecho a entregar el Informe Final</strong>.</span></div>
+          <div class="pol-card"><span class="pol-num">3</span><span class="pol-text">Si falla el Informe, puede presentarlo el cuatrimestre siguiente bajo asesoría.</span></div>
+          <div class="pol-card"><span class="pol-num">4</span><span class="pol-text">Si reprueba la mayoría de módulos, <strong>pierde derechos</strong> y reinicia.</span></div>
+          <div class="pol-card"><span class="pol-num">5</span><span class="pol-text">Módulos reprobados deben cursarse de nuevo en el siguiente periodo.</span></div>
+          <div class="pol-card"><span class="pol-num">6</span><span class="pol-text">Si suspende participación, los módulos se guardan solo por un cuatrimestre.</span></div>
+        </div>
+        <div style="flex:0 0 220px;">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400&auto=format&fit=crop" class="side-img" style="width:100%; height:100%;" alt="Leyes">
+        </div>
       </div>
     </div>
   </div>
@@ -1182,6 +1234,7 @@
   <!-- ══ SLIDE 14 · FIN ══ -->
   <div class="slide bg-hero" data-index="14">
     <div class="deco deco-1"></div>
+    <img src="https://images.unsplash.com/photo-1523050853064-dbad350c748c?q=80&w=1200&auto=format&fit=crop" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.15; pointer-events:none;" alt="Graduación">
     <div class="deco deco-2"></div>
     <div class="deco deco-3"></div>
     <div class="top-strip"></div>
