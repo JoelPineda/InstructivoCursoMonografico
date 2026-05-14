@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructivo Curso Monográfico – UNICARIBE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #0d1b3e;
+    --deep-blue: #1a3060;
+    --mid-blue: #2952a3;
+    --accent: #2ecc87;
+    --gold: #f0c040;
+    --white: #f8f9fc;
+    --light-gray: #e8edf5;
+    --text-dark: #0d1b3e;
+    --text-mid: #344060;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── DECK WRAPPER ── */
+  #deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SLIDES ── */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .55s ease, transform .55s cubic-bezier(.4,0,.2,1);
+    transform: translateX(60px);
+    padding: 0;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* ── BACKGROUNDS ── */
+  .bg-hero {
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a3060 50%, #0d3a2e 100%);
+  }
+  .bg-intro {
+    background: linear-gradient(160deg, #091529 0%, #1a3060 60%, #0d1b3e 100%);
+  }
+  .bg-sec1 {
+    background: linear-gradient(150deg, #0d1b3e 0%, #163372 55%, #0d2b5e 100%);
+  }
+  .bg-sec2 {
+    background: linear-gradient(140deg, #071220 0%, #1a3060 55%, #0b2240 100%);
+  }
+  .bg-sec3 {
+    background: linear-gradient(145deg, #0d1b3e 0%, #0d3a2e 50%, #091529 100%);
+  }
+  .bg-sec4 {
+    background: linear-gradient(150deg, #1a1a3e 0%, #2a1060 55%, #0d1b3e 100%);
+  }
+
+  /* ── DECORATIVE SHAPES ── */
+  .deco {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .18;
+    pointer-events: none;
+  }
+  .deco-1 { width: 420px; height: 420px; background: var(--accent); top: -120px; right: -80px; }
+  .deco-2 { width: 320px; height: 320px; background: var(--mid-blue); bottom: -100px; left: -80px; }
+  .deco-3 { width: 200px; height: 200px; background: var(--gold); bottom: 60px; right: 120px; opacity: .12; }
+
+  /* strip */
+  .top-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--mid-blue), var(--accent), var(--gold));
+  }
+  .bottom-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    opacity: .6;
+  }
+
+  /* ── LOGO BADGE ── */
+  .logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .logo-icon {
+    width: 52px; height: 52px;
+    background: white;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .logo-text {
+    line-height: 1.2;
+  }
+  .logo-text .uni { font-family: 'Playfair Display'; font-weight: 900; font-size: 15px; letter-spacing: .05em; color: white; }
+  .logo-text .dept { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: .1em; }
+
+  /* ── HERO SLIDE ── */
+  .hero-content {
+    text-align: center;
+    max-width: 820px;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(46,204,135,.18);
+    border: 1px solid rgba(46,204,135,.4);
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 50px;
+    margin-bottom: 22px;
+    animation: fadeUp .7s .2s both;
+  }
+  .hero-title {
+    font-family: 'Playfair Display';
+    font-size: clamp(36px, 5vw, 68px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    color: white;
+    animation: fadeUp .7s .35s both;
+    margin-bottom: 18px;
+  }
+  .hero-title span { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(14px, 1.6vw, 19px);
+    color: rgba(255,255,255,.65);
+    font-weight: 300;
+    animation: fadeUp .7s .5s both;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp .7s .65s both;
+  }
+  .meta-item {
+    text-align: center;
+  }
+  .meta-val {
+    font-family: 'Playfair Display';
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .meta-lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,.5);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+  }
+  .divider-v { width: 1px; height: 48px; background: rgba(255,255,255,.2); align-self: center; }
+
+  /* ── SECTION HEADER ── */
+  .slide-header {
+    width: 100%;
+    padding: 0 60px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 2;
+  }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-tag::before {
+    content: '';
+    display: block;
+    width: 28px; height: 2px;
+    background: var(--accent);
+  }
+  .slide-title {
+    font-family: 'Playfair Display';
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: white;
+  }
+  .slide-title em { color: var(--accent); font-style: normal; }
+  .presenter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .presenter-tag svg { width: 13px; height: 13px; }
+
+  /* ── CONTENT AREA ── */
+  .slide-body {
+    flex: 1;
+    width: 100%;
+    padding: 0 60px 40px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .col { flex: 1; }
+  .col-2 { flex: 2; }
+
+  /* ── CARDS ── */
+  .card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    transition: background .25s;
+    animation: fadeUp .5s both;
+  }
+  .card:hover { background: rgba(255,255,255,.1); }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .card-body { font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.6; }
+  .card-icon { font-size: 26px; margin-bottom: 8px; }
+
+  /* ── LIST ── */
+  .fancy-list { list-style: none; }
+  .fancy-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    font-size: 14px;
+    color: rgba(255,255,255,.85);
+    line-height: 1.55;
+    animation: fadeUp .4s both;
+  }
+  .fancy-list li:last-child { border-bottom: none; }
+  .bullet {
+    width: 22px; height: 22px; min-width: 22px;
+    background: linear-gradient(135deg, var(--accent), var(--mid-blue));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    margin-top: 1px;
+  }
+
+  /* ── PILL STAT ── */
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .stat-pill {
+    flex: 1;
+    min-width: 120px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-align: center;
+    animation: fadeUp .5s both;
+  }
+  .stat-num {
+    font-family: 'Playfair Display';
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table thead th {
+    background: rgba(41,82,163,.5);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .data-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    transition: background .2s;
+    animation: fadeUp .4s both;
+  }
+  .data-table tbody tr:hover { background: rgba(255,255,255,.06); }
+  .data-table td { padding: 9px 14px; color: rgba(255,255,255,.82); }
+  .data-table .pts { font-weight: 700; color: var(--gold); font-size: 15px; }
+
+  /* ── DONUT CHART wrapper ── */
+  .chart-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .chart-box { width: 220px; height: 220px; position: relative; flex-shrink: 0; }
+  .chart-legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,.8); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px; top: 10px; bottom: 10px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--mid-blue));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; animation: fadeUp .5s both; }
+  .tl-dot {
+    position: absolute;
+    left: -25px; top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--navy);
+  }
+  .tl-title { font-weight: 700; font-size: 14px; color: var(--accent); margin-bottom: 3px; }
+  .tl-body { font-size: 13px; color: rgba(255,255,255,.75); line-height: 1.5; }
+
+  /* ── MODULE CARDS ── */
+  .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; }
+  .mod-card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 18px;
+    padding: 22px 20px;
+    animation: fadeUp .5s both;
+    position: relative;
+    overflow: hidden;
+  }
+  .mod-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .mod-card.m1::before { background: var(--accent); }
+  .mod-card.m2::before { background: var(--mid-blue); }
+  .mod-card.m3::before { background: var(--gold); }
+  .mod-num { font-family: 'Playfair Display'; font-size: 42px; font-weight: 900; opacity: .08; position: absolute; right: 12px; top: 4px; color: white; }
+  .mod-icon { font-size: 28px; margin-bottom: 10px; }
+  .mod-title { font-weight: 700; font-size: 15px; color: white; margin-bottom: 6px; }
+  .mod-weeks { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+  .mod-desc { font-size: 12px; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+  /* ── POLICY CARDS ── */
+  .policy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; width: 100%; }
+  .pol-card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeUp .4s both;
+  }
+  .pol-num {
+    font-family: 'Playfair Display';
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    opacity: .5;
+    min-width: 36px;
+    line-height: 1;
+  }
+  .pol-text { font-size: 12.5px; color: rgba(255,255,255,.8); line-height: 1.55; }
+
+  /* ── THANK-YOU / LAST ── */
+  .ty-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 0 40px;
+    max-width: 680px;
+  }
+  .ty-emoji { font-size: 60px; margin-bottom: 16px; animation: bounceIn .6s both; }
+  .ty-title { font-family: 'Playfair Display'; font-size: 48px; font-weight: 900; color: white; margin-bottom: 14px; }
+  .ty-title span { color: var(--accent); }
+  .ty-body { font-size: 15px; color: rgba(255,255,255,.6); line-height: 1.7; }
+
+  /* ── NAV ── */
+  #nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(13,27,62,.85);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50px;
+    padding: 10px 20px;
+    z-index: 100;
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.6);
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: color .2s, background .2s;
+  }
+  .nav-btn:hover { color: white; background: rgba(255,255,255,.1); }
+  #slide-counter { font-size: 13px; color: rgba(255,255,255,.5); min-width: 58px; text-align: center; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.22);
+    cursor: pointer;
+    transition: background .25s, transform .25s;
+  }
+  .nav-dot.active { background: var(--accent); transform: scale(1.35); }
+
+  /* ── PROGRESS BAR ── */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--mid-blue), var(--accent));
+    transition: width .45s ease;
+    z-index: 200;
+  }
+
+  /* ── KEYBOARD HINT ── */
+  .kbd-hint {
+    position: fixed;
+    top: 18px; right: 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,.3);
+    letter-spacing: .06em;
+    z-index: 100;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounceIn {
+    0%   { transform: scale(.4); opacity: 0; }
+    70%  { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-14px); }
+  }
+  .float { animation: float 5s ease-in-out infinite; }
+
+  /* stagger delays for list items */
+  .fancy-list li:nth-child(1) { animation-delay: .05s }
+  .fancy-list li:nth-child(2) { animation-delay: .12s }
+  .fancy-list li:nth-child(3) { animation-delay: .19s }
+  .fancy-list li:nth-child(4) { animation-delay: .26s }
+  .fancy-list li:nth-child(5) { animation-delay: .33s }
+  .card:nth-child(1) { animation-delay: .05s }
+  .card:nth-child(2) { animation-delay: .15s }
+  .card:nth-child(3) { animation-delay: .25s }
+  .card:nth-child(4) { animation-delay: .35s }
+  .stat-pill:nth-child(1) { animation-delay: .1s }
+  .stat-pill:nth-child(2) { animation-delay: .2s }
+  .stat-pill:nth-child(3) { animation-delay: .3s }
+  .pol-card:nth-child(1) { animation-delay: .05s }
+  .pol-card:nth-child(2) { animation-delay: .12s }
+  .pol-card:nth-child(3) { animation-delay: .19s }
+  .pol-card:nth-child(4) { animation-delay: .26s }
+  .pol-card:nth-child(5) { animation-delay: .33s }
+  .pol-card:nth-child(6) { animation-delay: .40s }
+  .pol-card:nth-child(7) { animation-delay: .47s }
+  .data-table tbody tr:nth-child(1) { animation-delay: .05s }
+  .data-table tbody tr:nth-child(2) { animation-delay: .12s }
+  .data-table tbody tr:nth-child(3) { animation-delay: .19s }
+  .data-table tbody tr:nth-child(4) { animation-delay: .26s }
+  .mod-card:nth-child(1) { animation-delay: .05s }
+  .mod-card:nth-child(2) { animation-delay: .15s }
+  .mod-card:nth-child(3) { animation-delay: .25s }
+
+  /* scrollable body on small screens */
+  .slide-body.scrollable { overflow-y: auto; max-height: calc(100vh - 180px); }
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+
+  /* two-column helper */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+  .full-w { grid-column: 1/-1; }
+
+  /* highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(46,204,135,.12), rgba(41,82,163,.18));
+    border: 1px solid rgba(46,204,135,.3);
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: rgba(255,255,255,.88);
+    line-height: 1.6;
+    animation: fadeUp .5s .1s both;
+  }
+
+  /* intro special */
+  .member-row { display:flex; align-items:center; gap:10px; }
+  .member-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+  .member-name { font-size:13px; color:rgba(255,255,255,.85); font-weight:400; }
+
+  .intro-graphic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+  }
+  .book-icon { font-size: 72px; animation: float 4s ease-in-out infinite; }
+  .intro-badge {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px;
+  }
+  .badge {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: rgba(255,255,255,.7);
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div class="kbd-hint">← → para navegar</div>
+
+<div id="deck">
+
+  <!-- ══ SLIDE 0 · PORTADA ══ -->
+  <div class="slide bg-hero active" data-index="0">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="hero-content">
+      <div class="logo-badge" style="justify-content:center; animation: fadeUp .6s both;">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">
+          <div class="uni">UNIVERSIDAD DEL CARIBE</div>
+          <div class="dept">Vicerrectoría Académica · UNICARIBE</div>
+        </div>
+      </div>
+      <div class="hero-tag">Instructivo Oficial · Febrero 2019</div>
+      <h1 class="hero-title">Curso <span>Monográfico</span></h1>
+      <p class="hero-sub">Protocolo de elaboración, desarrollo y evaluación del informe final.<br>Herramienta que combina docencia e investigación aplicada.</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-val">10</span>
+          <span class="meta-lbl">Encuentros</span>
+        </div>
+        <div class="divider-v"></div>
+        <div class="meta-item">
+          <span class="meta-val">2½</span>
+          <span class="meta-lbl">Meses</span>
+        </div>
+        <div class="divider-v"></div>
+        <div class="meta-item">
+          <span class="meta-val">100</span>
+          <span class="meta-lbl">Puntos</span>
+        </div>
+        <div class="divider-v"></div>
+        <div class="meta-item">
+          <span class="meta-val">3</span>
+          <span class="meta-lbl">Módulos</span>
+        </div>
+      </div>
+
+      <!-- GROUP BOX -->
+      <div style="margin-top:28px; animation: fadeUp .7s .8s both;">
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:16px 24px;display:inline-block;text-align:left;min-width:320px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.1);">
+            <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--mid-blue));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display';font-size:15px;font-weight:900;color:white;flex-shrink:0;">5</div>
+            <div>
+              <div style="font-family:'Playfair Display';font-size:14px;font-weight:700;color:white;line-height:1.2;">Grupo 5</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;">Integrantes del equipo</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div class="member-row"><span class="member-dot"></span><span class="member-name">Lency Lisbeth Almonte Alcantara</span></div>
+            <div class="member-row"><span class="member-dot" style="background:#60a5fa;"></span><span class="member-name">Ronald Díaz Pérez</span></div>
+            <div class="member-row"><span class="member-dot" style="background:var(--gold);"></span><span class="member-name">Joel Pineda</span></div>
+            <div class="member-row"><span class="member-dot" style="background:#a78bfa;"></span><span class="member-name">Mary Mercedes Santana Rocha</span></div>
+            <div class="member-row"><span class="member-dot" style="background:#fb923c;"></span><span class="member-name">Wander Marte Calderón</span></div>
+            <div class="member-row"><span class="member-dot" style="background:#34d399;"></span><span class="member-name">Jhomy Manuel Del Jesus Medina</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 1 · INTRODUCCIÓN ══ -->
+  <div class="slide bg-intro" data-index="1">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">Sección Inicial</div>
+      <h2 class="slide-title">Introducción</h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        JHOMY MANUEL DEL JESUS MEDINA
+      </div>
+    </div>
+    <div class="slide-body" style="align-items:center;">
+      <div class="intro-graphic" style="flex:0 0 180px;">
+        <div class="book-icon">📚</div>
+        <div class="intro-badge">
+          <span class="badge">🎯 Protocolo</span>
+          <span class="badge">📋 Norma</span>
+          <span class="badge">🔬 Investigación</span>
+        </div>
+      </div>
+      <div class="col" style="max-width: 600px;">
+        <div class="highlight-box" style="margin-bottom:16px;">
+          Este instructivo establece el <strong>protocolo de elaboración, desarrollo y evaluación</strong> del informe final del curso monográfico, alineado con la política de calidad y los valores institucionales.
+        </div>
+        <ul class="fancy-list">
+          <li><span class="bullet">1</span><span>Proporciona orientaciones metodológicas esenciales sobre diseño, construcción y presentación del informe final.</span></li>
+          <li><span class="bullet">2</span><span>Aplicable a la diversidad temática de las distintas carreras que ofrecen el curso monográfico como opción de grado.</span></li>
+          <li><span class="bullet">3</span><span>Constituye la <em style="color:var(--accent);font-style:normal;">norma de obligatorio cumplimiento</em> para esta modalidad de trabajo de grado en UNICARIBE.</span></li>
+          <li><span class="bullet">4</span><span>Incluye formularios, criterios de edición y ejemplos de portadas como soporte al estudiante.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2 · 1.1 Definición ══ -->
+  <div class="slide bg-sec1" data-index="2">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">1. Descripción del Curso Monográfico</div>
+      <h2 class="slide-title">1.1 <em>Definición</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        LENCY LISBETH ALMONTE ALCANTARA
+      </div>
+    </div>
+    <div class="slide-body" style="align-items:center; gap:24px;">
+      <div class="col" style="max-width:340px; text-align:center;">
+        <div style="font-size:80px; margin-bottom:12px;" class="float">🔬</div>
+        <div class="highlight-box">
+          El Curso Monográfico es una <strong>variante del Trabajo de Grado</strong> que combina <em style="color:var(--accent);font-style:normal;">docencia</em> e <em style="color:var(--gold);font-style:normal;">investigación</em>.
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-icon">📖</div>
+          <div class="card-title">Profundización teórica</div>
+          <div class="card-body">Ofrece al estudiante la oportunidad de profundizar en conceptos, enfoques y contenidos de actualidad e interés en su área de estudios.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">Investigación aplicada</div>
+          <div class="card-body">Introduce al estudiante en la investigación aplicada dentro del ámbito de los contenidos del curso, conectando teoría y práctica profesional.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3 · 1.2 Objetivos ══ -->
+  <div class="slide bg-sec1" data-index="3">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">1. Descripción del Curso Monográfico</div>
+      <h2 class="slide-title">1.2 <em>Objetivos</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        LENCY LISBETH ALMONTE ALCANTARA
+      </div>
+    </div>
+    <div class="slide-body scrollable">
+      <div class="col" style="max-width: 680px; margin: 0 auto;">
+        <ul class="fancy-list">
+          <li><span class="bullet">🎯</span><span>Desarrollar experiencias de aprendizaje en torno a temas considerados de mayor interés y actualidad en las áreas de conocimiento relativas a la carrera y al ejercicio de la profesión.</span></li>
+          <li><span class="bullet">💡</span><span>Estimular a los estudiantes a desarrollar una actitud favorable a la investigación de problemas relacionados con la práctica profesional y su vinculación con los contextos laborales.</span></li>
+          <li><span class="bullet">📊</span><span>Sistematizar conocimientos sobre metodología de la investigación en su aplicación a temas y problemas concretos de investigación en el área de estudios.</span></li>
+          <li><span class="bullet">✅</span><span>Propiciar el ambiente académico adecuado para que los participantes en el Curso elaboren y presenten sus respectivos Informes Finales de manera exitosa.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4 · 1.3 Estructura & 1.4 Duración ══ -->
+  <div class="slide bg-sec1" data-index="4">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">1. Descripción del Curso Monográfico</div>
+      <h2 class="slide-title">1.3 Estructura &amp; 1.4 <em>Duración</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        LENCY LISBETH ALMONTE ALCANTARA
+      </div>
+    </div>
+    <div class="slide-body" style="flex-direction:column; gap:20px;">
+      <div class="module-grid">
+        <div class="mod-card m1">
+          <span class="mod-num">1</span>
+          <div class="mod-icon">📐</div>
+          <div class="mod-title">Módulo Metodológico</div>
+          <div class="mod-weeks">⏱ 2 semanas · 1 encuentro/semana</div>
+          <div class="mod-desc">Formación en metodología de investigación y elaboración del anteproyecto.</div>
+        </div>
+        <div class="mod-card m2">
+          <span class="mod-num">2</span>
+          <div class="mod-icon">📗</div>
+          <div class="mod-title">Módulo de Contenido</div>
+          <div class="mod-weeks">⏱ 6 semanas · 1 encuentro/semana</div>
+          <div class="mod-desc">Desarrollo teórico profundo del gran tema de la carrera. Modalidad semi-presencial.</div>
+        </div>
+        <div class="mod-card m3">
+          <span class="mod-num">3</span>
+          <div class="mod-icon">🤝</div>
+          <div class="mod-title">Asesorías</div>
+          <div class="mod-weeks">⏱ 2 semanas · 1 encuentro/semana</div>
+          <div class="mod-desc">Orientación y seguimiento metodológico tras concluir los módulos.</div>
+        </div>
+      </div>
+      <div class="stat-row" style="justify-content:center;">
+        <div class="stat-pill"><span class="stat-num">2½</span><span class="stat-lbl">Meses totales</span></div>
+        <div class="stat-pill"><span class="stat-num">10</span><span class="stat-lbl">Encuentros (4h c/u)</span></div>
+        <div class="stat-pill"><span class="stat-num">40h</span><span class="stat-lbl">Horas presenciales</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5 · 2.1 Inscripción ══ -->
+  <div class="slide bg-sec2" data-index="5">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">2. Procedimiento para realizar el Curso Monográfico</div>
+      <h2 class="slide-title">2.1 <em>Inscripción</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        RONALD DIAZ PEREZ
+      </div>
+    </div>
+    <div class="slide-body" style="align-items:center; gap:28px;">
+      <div style="text-align:center; flex:0 0 160px;">
+        <div style="font-size:72px;" class="float">📝</div>
+        <div style="font-size:13px; color: rgba(255,255,255,.55); margin-top:8px;">Dirección de<br>Trabajo de Grado</div>
+      </div>
+      <div class="col" style="max-width:560px;">
+        <p style="font-size:14px; color:rgba(255,255,255,.7); margin-bottom:14px;">Pueden optar por el curso monográfico los estudiantes que cumplan <strong style="color:white;">todos</strong> los siguientes requisitos:</p>
+        <ul class="fancy-list">
+          <li><span class="bullet">✔</span><span>Tener <strong>aprobada</strong> la asignatura <em style="color:var(--accent);font-style:normal;">Seminario de Grado</em>.</span></li>
+          <li><span class="bullet">✔</span><span>Estar cursando el <strong>último cuatrimestre</strong> del pensum de la carrera.</span></li>
+          <li><span class="bullet">✔</span><span>Tener <strong>solicitada la Revisión de Grado</strong> en la Dirección de Registro.</span></li>
+        </ul>
+        <div class="highlight-box" style="margin-top:16px;">
+          📌 De todos los requisitos se debe presentar la certificación correspondiente en la <strong>Dirección de Trabajo de Grado</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6 · 2.2 Participación & 2.3 Evaluación ══ -->
+  <div class="slide bg-sec2" data-index="6">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">2. Procedimiento</div>
+      <h2 class="slide-title">2.2 Participación &amp; 2.3 <em>Evaluación</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        RONALD DIAZ PEREZ
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap:24px;">
+      <div class="col">
+        <div class="card">
+          <div class="card-icon">👥</div>
+          <div class="card-title">Participación y Asistencia</div>
+          <div class="card-body">10 encuentros de <strong>4 horas</strong> cada uno. Asistencia puntual y participación obligatoria. <strong style="color:var(--gold);">2 ausencias</strong> implican reprobación automática.</div>
+        </div>
+        <div class="card" style="margin-top:0;">
+          <div class="card-icon">⚠️</div>
+          <div class="card-title">Asesorías obligatorias</div>
+          <div class="card-body">Todos los miembros del grupo deben asistir y participar en las sesiones de asesoría. La ausencia se contabiliza igual que en los módulos.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div style="margin-bottom:14px;">
+          <div class="chart-wrap">
+            <div class="chart-box"><canvas id="evalChart"></canvas></div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#2ecc87;"></div>Módulo Metodológico – 30 pts</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#2952a3;"></div>Módulo de Contenido – 30 pts</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#f0c040;"></div>Asesorías / Informe Final – 40 pts</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-row" style="justify-content:center;">
+          <div class="stat-pill" style="text-align:center;"><span class="stat-num">100</span><span class="stat-lbl">Puntos totales</span></div>
+          <div class="stat-pill" style="text-align:center;"><span class="stat-num">95+</span><span class="stat-lbl">Pts → copia impresa</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7 · Desglose evaluación por módulo ══ -->
+  <div class="slide bg-sec2" data-index="7">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">2.3 Evaluación – Detalle</div>
+      <h2 class="slide-title">Componentes de <em>Evaluación por Módulo</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        RONALD DIAZ PEREZ
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap: 20px; flex-wrap: wrap;">
+      <div class="col">
+        <p style="font-size:12px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px;">Módulo Metodológico</p>
+        <table class="data-table">
+          <thead><tr><th>Componente</th><th>Puntos</th></tr></thead>
+          <tbody>
+            <tr><td>Asistencia</td><td class="pts">6</td></tr>
+            <tr><td>Participación</td><td class="pts">5</td></tr>
+            <tr><td>Actividades</td><td class="pts">9</td></tr>
+            <tr><td>Versión Final Anteproyecto</td><td class="pts">10</td></tr>
+            <tr><td><strong>Total</strong></td><td class="pts" style="color:var(--accent);">30</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <p style="font-size:12px; color:var(--mid-blue); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; filter:brightness(1.6);">Módulo de Contenido</p>
+        <table class="data-table">
+          <thead><tr><th>Componente</th><th>Puntos</th></tr></thead>
+          <tbody>
+            <tr><td>Asistencia</td><td class="pts">6</td></tr>
+            <tr><td>Participación</td><td class="pts">5</td></tr>
+            <tr><td>Actividades</td><td class="pts">9</td></tr>
+            <tr><td>Versión Preliminar Informe Final</td><td class="pts">10</td></tr>
+            <tr><td><strong>Total</strong></td><td class="pts" style="color:var(--accent);">30</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <p style="font-size:12px; color:var(--gold); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px;">Asesorías</p>
+        <table class="data-table">
+          <thead><tr><th>Componente</th><th>Puntos</th></tr></thead>
+          <tbody>
+            <tr><td>Informe Final</td><td class="pts">40</td></tr>
+            <tr><td><strong>Total</strong></td><td class="pts" style="color:var(--gold);">40</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-box" style="margin-top:14px; font-size:13px;">
+          🏆 Grupos con <strong>≥ 95 puntos</strong> deben entregar <strong>2 ejemplares impresos y empastados</strong> a la Coordinación.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8 · 3.1 Módulo Metodológico ══ -->
+  <div class="slide bg-sec3" data-index="8">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">3. Descripción de los Módulos</div>
+      <h2 class="slide-title">3.1 El Módulo <em>Metodológico</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        Joel Pineda
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap:24px;">
+      <div class="col">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-title">Definición de grupos</div>
+            <div class="tl-body">Se conforman grupos de trabajo de <strong>máximo 3 participantes</strong> y se analizan los criterios para el informe final.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-title">Selección del Tema</div>
+            <div class="tl-body">Cada grupo selecciona un tema propuesto por la Dirección de su carrera, lo delimita y lo envía para aprobación vía <em style="color:var(--accent);font-style:normal;">Blackboard</em>.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-title">Elaboración del Anteproyecto</div>
+            <div class="tl-body">Con el tema aprobado, se desarrolla el anteproyecto de forma paralela a las sesiones presenciales y actividades virtuales.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-title">Producto del módulo</div>
+            <div class="tl-body">🗂 <strong style="color:var(--gold);">Versión Final del Anteproyecto de Investigación</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="highlight-box" style="margin-bottom:14px;">
+          📌 Si el estudiante ya tiene un anteproyecto pre-elaborado desde <em>Seminario de Grado</em>, deberá incorporar las observaciones del asesor del curso monográfico.
+        </div>
+        <div class="card">
+          <div class="card-icon">🖥️</div>
+          <div class="card-title">Modalidad semi-presencial</div>
+          <div class="card-body">Se contemplan actividades complementarias en la <strong>plataforma virtual Blackboard</strong> que refuerzan las sesiones presenciales.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 9 · 3.1.3 Elementos del Anteproyecto ══ -->
+  <div class="slide bg-sec3" data-index="9">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">3.1 Módulo Metodológico</div>
+      <h2 class="slide-title">3.1.3 Elementos del <em>Anteproyecto</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        Joel Pineda
+      </div>
+    </div>
+    <div class="slide-body scrollable">
+      <div class="two-col" style="width:100%;">
+        <div class="card"><div class="card-title">📄 Portada</div><div class="card-body">Logo, universidad, escuela/carrera, identificación, título, autores, asesores, ciudad, país y fecha.</div></div>
+        <div class="card"><div class="card-title">🔤 Título</div><div class="card-body">Claro, preciso y conciso. Refleja el contenido del trabajo de forma inequívoca.</div></div>
+        <div class="card"><div class="card-title">📋 Índice</div><div class="card-body">Esquema de presentación con especificación de partes y páginas que ocupan.</div></div>
+        <div class="card"><div class="card-title">📝 Introducción</div><div class="card-body">Describe el contenido general y temático, comunicando al lector los motivos de la investigación.</div></div>
+        <div class="card"><div class="card-title">❓ Planteamiento del Problema</div><div class="card-body">Describe la problemática, identifica el objeto de estudio y redacta el problema como interrogante.</div></div>
+        <div class="card"><div class="card-title">📚 Antecedentes / Justificación</div><div class="card-body">Referencias teóricas locales, nacionales e internacionales. Importancia y necesidad de la investigación.</div></div>
+        <div class="card"><div class="card-title">🎯 Objetivos y Variables</div><div class="card-body">Objetivos general y específicos con verbos operativos. Delimitación y operacionalización de variables.</div></div>
+        <div class="card"><div class="card-title">🔬 Materiales y Métodos</div><div class="card-body">Tipo de estudio, diseño, población, muestra, instrumentos y procesamiento de datos.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 10 · 3.3 Asesorías ══ -->
+  <div class="slide bg-sec3" data-index="10">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">3. Descripción de los Módulos</div>
+      <h2 class="slide-title">3.3 <em>Asesorías</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        Joel Pineda
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap:24px; align-items:flex-start;">
+      <div class="col">
+        <div class="highlight-box" style="margin-bottom:14px;">
+          Las asesorías son la <strong>orientación y seguimiento</strong> metodológico y de contenido que ofrecen los facilitadores del curso tras concluir ambos módulos.
+        </div>
+        <ul class="fancy-list">
+          <li><span class="bullet">📊</span><span>Los estudiantes trabajan a partir de los <strong>datos de campo</strong> recolectados en su investigación.</span></li>
+          <li><span class="bullet">🔍</span><span>El objetivo es apoyar en la <strong>organización e interpretación</strong> de los datos y elaboración de conclusiones.</span></li>
+          <li><span class="bullet">📌</span><span>Cada grupo debe presentar los aspectos asignados e incorporar las modificaciones recomendadas por el asesor.</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-icon">📄</div>
+          <div class="card-title">Producto Final</div>
+          <div class="card-body">🏆 <strong style="color:var(--gold);">Informe Final de Investigación</strong> — documento escrito con los resultados completos del trabajo de grado, que cumple los estándares de calidad institucional.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <div class="card-title">Extensión del informe</div>
+          <div class="card-body">De <strong>40 a 60 páginas</strong> (sin anexos), con capítulos iniciando en nueva página y sustentado en citas y referencias científicas.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">Aporte científico</div>
+          <div class="card-body">El informe final debe constituirse en un <strong>aporte a la comunidad científica</strong> del país dentro de su área de estudio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 11 · 3.2 Módulo de Contenido (después de 3.3) ══ -->
+  <div class="slide bg-sec3" data-index="11">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">3. Descripción de los Módulos</div>
+      <h2 class="slide-title">3.2 El Módulo de <em>Contenido</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        MARY MERCEDES SANTANA ROCHA
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap:24px;">
+      <div class="col">
+        <div style="font-size:64px; text-align:center; margin-bottom:12px;" class="float">📗</div>
+        <div class="highlight-box">
+          Provee los <strong>fundamentos teóricos básicos</strong> que orientan las investigaciones de los informes finales. El facilitador conoce los anteproyectos y da seguimiento durante el módulo.
+        </div>
+      </div>
+      <div class="col">
+        <ul class="fancy-list">
+          <li><span class="bullet">📌</span><span>Trata el tema de actualidad e interés del área de la carrera, propiciando la <strong>profundización en aspectos relevantes</strong>.</span></li>
+          <li><span class="bullet">🔬</span><span>Se define el <strong>marco teórico y referencial</strong> de la investigación, el objeto de conocimiento y el manejo de datos.</span></li>
+          <li><span class="bullet">🖥️</span><span>Incluye actividades en la plataforma virtual que complementan las sesiones presenciales.</span></li>
+          <li><span class="bullet">📋</span><span>Producto del módulo: <strong style="color:var(--gold);">Versión Preliminar del Informe Final de Investigación</strong>.</span></li>
+        </ul>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">Relación con las investigaciones</div>
+          <div class="card-body">Los contenidos del módulo guardan estrecha relación con los temas de investigación del grupo, garantizando manejo conceptual y pertinencia.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 12 · 3.2.1 Edición del Informe ══ -->
+  <div class="slide bg-sec3" data-index="12">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">3.2 Módulo de Contenido</div>
+      <h2 class="slide-title">3.2.1 Edición del <em>Informe Final</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        MARY MERCEDES SANTANA ROCHA
+      </div>
+    </div>
+    <div class="slide-body scrollable" style="gap:20px; flex-wrap:wrap;">
+      <div class="col" style="min-width:260px;">
+        <p style="font-size:12px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px;">Color de tapas por carrera</p>
+        <table class="data-table">
+          <thead><tr><th>Carrera</th><th>Color</th></tr></thead>
+          <tbody>
+            <tr><td>Educación y Psicología</td><td><span style="color:#8B5CF6;">⬤</span> Morado obispo</td></tr>
+            <tr><td>Mercadeo / Contabilidad / Adm.</td><td><span style="color:#1E40AF;">⬤</span> Azul marino</td></tr>
+            <tr><td>Derecho / Cs. Políticas / RRII</td><td><span style="color:#111;">⬤</span> Negro</td></tr>
+            <tr><td>Comunicación Social y Publicidad</td><td><span style="color:#92400E;">⬤</span> Marrón</td></tr>
+            <tr><td>Informática</td><td><span style="color:#f0c040;">⬤</span> Blanco · Imp. dorada</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col" style="min-width:260px;">
+        <p style="font-size:12px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px;">Tipografía y formato</p>
+        <ul class="fancy-list" style="font-size:13px;">
+          <li><span class="bullet" style="font-size:9px;">📌</span><span>Fuente <strong>Arial</strong> en todo el documento.</span></li>
+          <li><span class="bullet" style="font-size:9px;">📐</span><span>Portadas: 14–18 pt mayúscula · Capítulos: 14 pt · Texto: 12 pt.</span></li>
+          <li><span class="bullet" style="font-size:9px;">📏</span><span>Márgenes: Izq. 3 cm · Der. 2.5 cm · Sup. 3 cm · Inf. 2.5 cm.</span></li>
+          <li><span class="bullet" style="font-size:9px;">📃</span><span>Papel Bond 20 o hilo, tamaño 8½×11, hojas blancas.</span></li>
+          <li><span class="bullet" style="font-size:9px;">🔢</span><span>Numeración romana (páginas iniciales) y arábica desde la introducción.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 13 · 4 Políticas ══ -->
+  <div class="slide bg-sec4" data-index="13">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="slide-header">
+      <div class="section-tag">Sección 4</div>
+      <h2 class="slide-title">Políticas del Curso <em>Monográfico</em></h2>
+      <div class="presenter-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        Wander Marte Calderón
+      </div>
+    </div>
+    <div class="slide-body scrollable">
+      <div class="policy-grid">
+        <div class="pol-card"><span class="pol-num">1</span><span class="pol-text">Los módulos <strong>no se retiran</strong>. Una vez inscrito el Curso, el estudiante debe concluirlo según la programación.</span></div>
+        <div class="pol-card"><span class="pol-num">2</span><span class="pol-text">Al aprobar todos los módulos, el estudiante adquiere el <strong>derecho a entregar el Informe Final</strong>.</span></div>
+        <div class="pol-card"><span class="pol-num">3</span><span class="pol-text">Si aprueba módulos pero <strong>no el Informe Final</strong>, puede volver a presentarlo bajo asesoría a más tardar en el cuatrimestre siguiente.</span></div>
+        <div class="pol-card"><span class="pol-num">4</span><span class="pol-text">Si no aprueba la mitad+1 de los módulos en la primera vez, <strong>pierde los derechos</strong> y debe inscribir el curso nuevamente.</span></div>
+        <div class="pol-card"><span class="pol-num">5</span><span class="pol-text">Si reprueba algún módulo, debe <strong>inscribirlo, cursarlo y aprobarlo</strong> en otro curso a más tardar en el siguiente cuatrimestre.</span></div>
+        <div class="pol-card"><span class="pol-num">6</span><span class="pol-text">Si en el siguiente cuatrimestre no completa todos los módulos, debe <strong>iniciar de nuevo el proceso</strong> y el tema queda sujeto a revisión.</span></div>
+        <div class="pol-card" style="grid-column:1/-1;"><span class="pol-num">7</span><span class="pol-text">El estudiante puede <strong>suspender su participación</strong>; los módulos aprobados se transfieren al siguiente cuatrimestre, tras el cual pierde los derechos.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 14 · FIN ══ -->
+  <div class="slide bg-hero" data-index="14">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+    <div class="top-strip"></div>
+    <div class="bottom-strip"></div>
+    <div class="ty-content">
+      <div class="ty-emoji">🎓</div>
+      <h2 class="ty-title">¡<span>Gracias</span>!</h2>
+      <p class="ty-body">
+        Instructivo del Curso Monográfico<br>
+        <strong style="color:white;">Universidad del Caribe – UNICARIBE</strong><br>
+        Vicerrectoría Académica · Febrero 2019
+      </p>
+      <div style="margin-top:28px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <span style="background:rgba(46,204,135,.15); border:1px solid rgba(46,204,135,.3); color:var(--accent); font-size:12px; padding:6px 16px; border-radius:50px;">Lency L. Almonte</span>
+        <span style="background:rgba(41,82,163,.2); border:1px solid rgba(41,82,163,.4); color:#7ba8ff; font-size:12px; padding:6px 16px; border-radius:50px;">Ronald Díaz</span>
+        <span style="background:rgba(240,192,64,.12); border:1px solid rgba(240,192,64,.3); color:var(--gold); font-size:12px; padding:6px 16px; border-radius:50px;">Joel Pineda</span>
+        <span style="background:rgba(46,204,135,.12); border:1px solid rgba(46,204,135,.25); color:var(--accent); font-size:12px; padding:6px 16px; border-radius:50px;">Mary M. Santana</span>
+        <span style="background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.7); font-size:12px; padding:6px 16px; border-radius:50px;">Wander Marte</span>
+        <span style="background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.3); color:#34d399; font-size:12px; padding:6px 16px; border-radius:50px;">Jhomy M. Del Jesus</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div id="nav">
+  <button class="nav-btn" id="prevBtn" title="Anterior">&#8592;</button>
+  <div class="nav-dots" id="navDots"></div>
+  <span id="slide-counter">1 / 15</span>
+  <button class="nav-btn" id="nextBtn" title="Siguiente">&#8594;</button>
+  <div style="width:1px; height:20px; background:rgba(255,255,255,.15); margin:0 4px;"></div>
+  <button class="nav-btn" id="fsBtn" title="Pantalla completa" style="font-size:16px;">
+    <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M16 4h4v4M4 16v4h4M16 20h4v-4"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let transitioning = false;
+
+// Build nav dots
+const dotsContainer = document.getElementById('navDots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(d);
+});
+
+function updateUI() {
+  document.getElementById('slide-counter').textContent = `${current + 1} / ${total}`;
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  document.getElementById('progress').style.width = ((current / (total - 1)) * 100) + '%';
+}
+
+function goTo(n) {
+  if (transitioning || n === current || n < 0 || n >= total) return;
+  transitioning = true;
+  const prev = current;
+  slides[prev].classList.add('exit-left');
+  slides[prev].classList.remove('active');
+  current = n;
+  slides[current].classList.remove('exit-left');
+  slides[current].classList.add('active');
+  updateUI();
+  setTimeout(() => {
+    slides[prev].classList.remove('exit-left');
+    transitioning = false;
+  }, 580);
+  // Re-trigger chart on slide 6
+  if (current === 6) setTimeout(buildChart, 100);
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') goTo(current + 1);
+  if (e.key === 'ArrowLeft') goTo(current - 1);
+});
+
+// Swipe
+let touchX = null;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+  touchX = null;
+});
+
+// Build chart
+function buildChart() {
+  const canvas = document.getElementById('evalChart');
+  if (!canvas) return;
+  if (canvas._chart) { canvas._chart.destroy(); }
+  canvas._chart = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: ['Metodológico', 'Contenido', 'Asesorías'],
+      datasets: [{
+        data: [30, 30, 40],
+        backgroundColor: ['#2ecc87', '#2952a3', '#f0c040'],
+        borderColor: 'rgba(13,27,62,.5)',
+        borderWidth: 3,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} pts` }
+      }},
+      animation: { animateRotate: true, duration: 900 }
+    }
+  });
+}
+
+// Fullscreen
+const fsBtn = document.getElementById('fsBtn');
+const fsIcon = document.getElementById('fsIcon');
+const enterIcon = `<path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M16 4h4v4M4 16v4h4M16 20h4v-4"/>`;
+const exitIcon  = `<path stroke-linecap="round" stroke-linejoin="round" d="M8 4H4v4M4 16v4h4M20 8h-4V4M16 20h4v-4"/>`;
+
+function updateFsIcon() {
+  fsIcon.innerHTML = document.fullscreenElement ? exitIcon : enterIcon;
+}
+fsBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', updateFsIcon);
+document.addEventListener('keydown', e => { if (e.key === 'F11') { e.preventDefault(); fsBtn.click(); } });
+
+updateUI();
+// init chart if starting on slide 6
+if (current === 6) buildChart();
+</script>
+</body>
+</html>
